@@ -1,0 +1,60 @@
+env:
+    GITHUB_TOKEN: ENCRYPTED[63126c9152d2fede43ec7f7a5e4ed3fc1f407cd838c60411dc92933a9cffd8fa6a79af3cc44e898cc0cdc09ccf483ffd]
+    
+    # Cirrus Specific Vars (Do *NOT* Change)
+    CIRRUS_SHELL: bash
+
+task:
+  name: "CustomRom Build"
+  timeout_in: 120m
+  container:
+      image: ghcr.io/sushrut1101/docker:arch
+      cpu: 8
+      memory: 32G
+
+  Repo Sync_script:
+      # Variables
+      - MRepo="https://github.com/LineageOS/android.git"
+      - MBranch="lineage-20.0"            
+      # Initialize Repo Manifest
+      - repo init -u ${MRepo} -b ${MBranch}
+      # Sync Repo
+      - repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
+      - repo sync --force-sync
+      
+  Device Tree Cloning_script:
+      # Variables
+      - Device="RMX1851"
+      - OEM="realme"
+      - DeviceTree="https://github.com/Cykeek-Labs/device_realme_RMX1851"
+      - DTBranch="lineage-20.0"
+      - VendorDeviceTree="https://github.com/Cykeek-Labs/android_vendor_RMX1851"
+      - VDTBranch="13"
+      - KernelDeviceTree="https://github.com/viviz-kernel-Devices/viviz-sdm710"
+      - KDTBranch="viviz"   
+      # Cloning the Device Tree
+      - git clone ${DeviceTree} -b ${DTBranch} device/${OEM}/${Device}
+      - git clone ${VendorDeviceTree} -b ${VDTBranch} vendor/${OEM}/${Device}
+      - git clone ${KernelDeviceTree} -b ${KDTBranch} kernel/${OEM}/sdm710
+      
+  Building_script:
+      - TARGET="bacon"
+      - export USE_CCACHE=1
+      - export CCACHE_EXEC=/usr/bin/ccache
+      - ccache -M 50G
+      - export LC_ALL=C
+      # Setup the Build Enviroment
+      - source build/envsetup.sh
+      - export CONFIG_STATE_NOTIFIER=y
+      - export SELINUX_IGNORE_NEVERALLOWS=true
+      - export ALLOW_MISSING_DEPENDENCIES=true
+      - lunch lineage_${Device}-userdebug
+      - mka -j$(nproc) ${TARGET}
+
+  Uploading_script:
+      # Outputfolder
+      - Output="out/target/product/${Device}"
+      # Download Upload Script
+      - curl -sL https://git.io/file-transfer | sh
+      # Upload
+      - ./transfer wet ${Output}/lineage*.zip
