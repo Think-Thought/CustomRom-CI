@@ -14,7 +14,6 @@ task:
       - repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
       - git clone https://github.com/U89-sk/device_realme_RMX1851 -b lineage-20.0 device/realme/RMX1851
       - git clone https://github.com/U89-sk/android_vendor_RMX1851 vendor/realme/RMX1851
-      - git clone https://github.com/viviz-kernel-Devices/viviz-sdm710 kernel/realme/sdm710
       - repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
       - repo sync --force-sync
 
