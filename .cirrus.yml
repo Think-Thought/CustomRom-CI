@@ -19,7 +19,7 @@ task:
       - repo init -u https://github.com/bananadroid/android_manifest.git -b 13
       - git clone https://github.com/Think-Thought/device_realme_RMX1851 -b bananadroid ./device/realme/RMX1851
       - git clone https://github.com/Think-Thought/android_vendor_RMX1851 ./vendor/realme/RMX1851
-      - repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
+      - repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags --optimized-fetch --prune
       - repo sync --force-sync
 
   Building_script:
