@@ -11,7 +11,7 @@ task:
       memory: 32G
 
   Clone_script:
-      - repo init -u https://github.com/LineageOS/android.git -b lineage-20.0
+      - repo init -u https://github.com/bananadroid/android_manifest.git -b 13
       - git clone https://github.com/U89-sk/device_realme_RMX1851 -b lineage-20.0 device/realme/RMX1851
       - git clone https://github.com/U89-sk/android_vendor_RMX1851 vendor/realme/RMX1851
       - repo sync -j$(nproc) --force-sync --no-clone-bundle --no-tags
@@ -26,8 +26,8 @@ task:
       - export SELINUX_IGNORE_NEVERALLOWS=true
       - export ALLOW_MISSING_DEPENDENCIES=true
       - source build/envsetup.sh
-      - lunch lineage_RMX1851-userdebug
-      - mka bacon -j$(nproc --all)
+      - lunch banana_RMX1851-userdebug
+      - m banana
 
   Uploading_script:
       - curl -sL https://git.io/file-transfer | sh
