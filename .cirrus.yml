@@ -31,4 +31,4 @@ task:
 
   Uploading_script:
       - curl -sL https://git.io/file-transfer | sh
-      - ./transfer wet out/target/product/RMX1851/lineage*.zip
+      - ./transfer wet out/target/product/RMX1851/BananaDroid*.zip
