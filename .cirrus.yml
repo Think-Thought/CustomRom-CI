@@ -6,9 +6,9 @@ task:
   name: "CustomRom Build"
   timeout_in: 4h
   container:
-      image: apon77/aosp:cirrus
-      cpu: 24
-      memory: 120G
+      image: ubuntu-latest
+      cpu: 8
+      memory: 32Gb
 
   Prepare_the_environment_Script:
       - sudo apt-get update --fix-missing
